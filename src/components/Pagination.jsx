@@ -7,7 +7,7 @@ function Pagination({ pagination , onChangePage }) {
 
     return (
         <nav aria-label="Page navigation example">
-            {JSON.stringify(pagination)}
+            {/* {JSON.stringify(pagination)} */}
             <ul className="pagination justify-content-center">
                 <li className={`page-item ${!pagination.has_pre && 'disabled'}`}>
                     <a className="page-link" href="#" aria-label="Previous"
