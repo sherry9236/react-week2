@@ -24,21 +24,9 @@ const INITIAL_TEMPLATE_DATA = {
 };
 
 function App() {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
 
   // 登入狀態管理(控制顯示登入或產品頁）
   const [isAuth, setIsAuth] = useState(false);
-
-  const inputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((preData) => ({
-      ...preData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
 
   const handleModalInputChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -160,27 +148,6 @@ function App() {
 
   }
 
-  // 登入
-  const onSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      const response = await axios.post(`${API_BASE}/admin/signin`, formData);
-      // console.log(response.data);
-
-      // 設定cookie
-      const { token, expired } = response.data;
-      document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-      axios.defaults.headers.common["Authorization"] = token;
-
-      getProducts();
-      setIsAuth(true);
-
-    } catch (error) {
-      setIsAuth(false);
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     // 讀取cookie
     const token = document.cookie
@@ -228,40 +195,7 @@ function App() {
   return (
     <>
       {!isAuth ? (
-        <div className="container login">
-          <h1>請先登入</h1>
-          <form className="form-floating" onSubmit={onSubmit}>
-            <div className="form-floating mb-3">
-              <input
-                type="email"
-                className="form-control"
-                name="username"
-                placeholder="name@example.com"
-                value={formData.username}
-                onChange={inputChange}
-              />
-              <label htmlFor="username">Email address</label>
-            </div>
-            <div className="form-floating">
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={inputChange}
-              />
-              <label htmlFor="password">Password</label>
-            </div>
-            <button
-              type="submit"
-              className="btn btn-primary mt-2"
-              style={{ width: "100%" }}
-            >
-              登入
-            </button>
-          </form>
-        </div>
+        <Login getProducts={getProducts} setIsAuth={setIsAuth} />
       ) : (
         <div className="container">
           <h2>產品列表</h2>
